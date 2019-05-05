@@ -25,7 +25,9 @@ public class Swing_Frame extends JFrame {
 
         LinkedList<int[]> edges = new LinkedList<>();
         edges.add(new int[]{2, 3}); //rotater
-        edges.add(new int[]{3, 1, 4}); //longest
+//        edges.add(new int[]{3, 1, 4}); //longest
+        edges.add(new int[]{3,1});
+
         edges.add(new int[]{0, 1}); //short left
 
         return new Mechanism(edges, points);
@@ -40,10 +42,10 @@ public class Swing_Frame extends JFrame {
         setIconImage(new ImageIcon("512px-Steam_icon_logo.svg.png").getImage());
 
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (int)(dimension.getWidth() / 2);
-        int y = (int)(dimension.getHeight() / 2);
+        int x = (int)(dimension.getWidth() / 3);
+        int y = (int)(dimension.getHeight() / 3);
         setLocation(x/2, y/2);
-        setSize(x,y);
+        setSize(x*2,y*2);
 
         mech = createMech();
         positions = new LinkedList<>();

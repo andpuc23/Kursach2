@@ -38,15 +38,18 @@ public class Mechanism {
 
 
     public void rotate(int i, double angle){
-
+        DoublePair dist = contents[i].getFinish();
         contents[i].rotate(angle);
 
-        /*for (int j = 0; j < contents.length; j++) {
+        for (int j = 0; j < contents.length; j++) {
             if (contents[i].getEnd().adjacent.contains(j)) {
-                if (!contents[j].getMoved()) {
-                    contents[j].DFS_Movement(contents[i].getFinish(), pif, contents);
-                }
+
+                contents[j].DFS_Movement(
+                        contents[i].getFinish(),
+                        new DoublePair(contents[i].getEndX() - dist.first,
+                                    contents[i].getEndY() - dist.second),
+                        contents);
             }
-        }*/
+        }
     }
 }

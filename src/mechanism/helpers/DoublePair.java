@@ -10,10 +10,15 @@ public class DoublePair{
     }
 
     public boolean equals(DoublePair other){
-        return first == other.first && second == other.second;
+        return Math.abs(first - other.first) < 2 && Math.abs(second - other.second) <2;
     }
 
-    public DoublePair neg(){
-        return new DoublePair(this.first*(-1), this.second*(-1));
+    public DoublePair add(DoublePair other){
+        return new DoublePair(this.first + other.first, this.second + other.second);
+    }
+
+    public void reverse(){
+        this.first *= -1;
+        this.second *= -1;
     }
 }

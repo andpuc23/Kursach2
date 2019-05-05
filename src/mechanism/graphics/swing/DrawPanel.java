@@ -21,7 +21,7 @@ public class DrawPanel extends JPanel {
     }
 
     @Override
-    public void paint(Graphics g) {
+    synchronized public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2 = (Graphics2D) g;
 
@@ -29,6 +29,8 @@ public class DrawPanel extends JPanel {
             drawPath(g2, positions);
 
         drawMech(g2, mech);
+//        drawPath(g2, posits);
+        drawNet(g2);
     }
 
     void drawMech(Graphics2D g2, Mechanism m){
@@ -56,28 +58,39 @@ public class DrawPanel extends JPanel {
             }
 
             else if (edge instanceof TriEdge){
-//                Line2D line1 = new Line2D.Double(edge.getStartX(), edge.getStartY(),
-//                        ((TriEdge)edge).getCenterX(), ((TriEdge)edge).getCenterY());
-//                Line2D line2 = new Line2D.Double(((TriEdge)edge).getCenterX(),
-//                        ((TriEdge)edge).getCenterY(), edge.getEndX(), edge.getEndY());
+                Line2D line1 = new Line2D.Double(edge.getStartX(), edge.getStartY(),
+                        ((TriEdge)edge).getCenterX(), ((TriEdge)edge).getCenterY());
+                Line2D line2 = new Line2D.Double(((TriEdge)edge).getCenterX(),
+                        ((TriEdge)edge).getCenterY(), edge.getEndX(), edge.getEndY());
                 Line2D line3 = new Line2D.Double(edge.getStartX(), edge.getStartY(),
                         edge.getEndX(), edge.getEndY());
 
                 g2.setColor(Color.BLACK);
                 g2.setStroke(new BasicStroke(2));
 
-//                g2.draw(line1);
-//                g2.draw(line2);
+                g2.draw(line1);
+                g2.draw(line2);
                 g2.draw(line3);
             }
         }
     }
 
     synchronized void drawPath(Graphics2D g2, LinkedList<Point2D> positions) {
-        g2.setColor(Color.ORANGE);
+        g2.setColor(Color.orange);
         for (Point2D p : positions){
             g2.draw(new Ellipse2D.Double(p.getX() - 2.5, p.getY() - 2.5, 5,5));
             g2.fill(new Ellipse2D.Double(p.getX() - 2.5, p.getY() - 2.5, 5,5));
+        }
+    }
+
+    synchronized void drawNet(Graphics2D g2){
+        g2.setColor(Color.black);
+        g2.setStroke(new BasicStroke(0.02f));
+        for (int i = 25; i < 2000; i += 25){
+            g2.draw(new Line2D.Double(0,i,2000,i));
+        }
+        for (int i = 25; i < 2000; i += 25){
+            g2.draw(new Line2D.Double(i,0,i,2000));
         }
     }
 }

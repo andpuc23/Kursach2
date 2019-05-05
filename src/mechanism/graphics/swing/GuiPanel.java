@@ -42,8 +42,7 @@ public class GuiPanel extends JPanel {
         rotBut.addActionListener((ActionEvent event) -> {
             m.rotate(0, slider.getValue());
 
-            positions.add(new Point2D.Double(
-                    m.joints[3].getCenterX(), m.joints[3].getCenterY()));
+            addPoint(1, positions);
             dp.repaint();
         });
 
@@ -70,8 +69,7 @@ public class GuiPanel extends JPanel {
                 if (rotateOn) {
                     m.rotate(0, slider.getValue());
 
-                    positions.add(new Point2D.Double(
-                            m.joints[3].getCenterX(), m.joints[3].getCenterY()));
+                    addPoint(1, positions);
                     dp.repaint();
                 }
                 try {
@@ -99,7 +97,11 @@ public class GuiPanel extends JPanel {
         stopRotating.setFont(font);
         add(stopRotating);
         stopRotating.addActionListener(event -> rotateOn = false);
+    }
 
-
+    synchronized void addPoint(int pointNum, LinkedList<Point2D> positions){
+        int index = positions.size()%360;
+            positions.add(index, new Point2D.Double(
+                m.joints[pointNum].getCenterX(), m.joints[pointNum].getCenterY()));
     }
 }

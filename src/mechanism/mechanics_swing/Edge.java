@@ -7,8 +7,16 @@ import helpers.Utils;
 public class Edge implements MechPart{
     myPoint beginning;
     myPoint end;
-
+    double length;
     boolean gotPosition;
+
+    private double Length(){
+        return Math.sqrt((getEndX()-getStartX())*(getEndX()-getStartX()) + (getEndY()-getStartY())*(getEndY()-getStartY()));
+    }
+
+    public String toString(){
+        return "(" + getStartX() + "; " + getStartY() + ") to (" + getEndX() + "; " + getEndY() + "); length:" + Length();
+    }
 
     public myPoint getBeginning() { return beginning; }
 
@@ -66,6 +74,11 @@ public class Edge implements MechPart{
         setFinish(getEndX() + dx, getEndY() + dy);
     }
 
+    public void move (DoublePair d){
+        setStart(getStartX() + d.first, getStartY() + d.second);
+        setFinish(getEndX() + d.first, getEndY() + d.second);
+    }
+
     public void rotate(double angle){
         DoublePair pif = new DoublePair(getEndX() - getStartX(),
                 getEndY() - getStartY());
@@ -85,25 +98,63 @@ public class Edge implements MechPart{
     @Override
     public DoublePair DFS_Movement(DoublePair source, DoublePair distance, MechPart[] contents) {
         if (source.equals(getStart())){
-            if (getEnd().isConstant()) {
+            if (getEnd().isConstant()){
+                DoublePair bestPosition = Utils.getBestPosition(source, this);
+                setStart(bestPosition.first, bestPosition.second);
                 this.gotPosition = true;
+
+                System.out.println(this.toString());
+                return new DoublePair(bestPosition.first - source.first, bestPosition.second - source.second);
             }
             else {
                 setFinish(getEndX() + distance.first, getEndY() + distance.second);
                 if (!getEnd().adjacent.isEmpty()) {
+                    DoublePair returnMovement; // = new DoublePair(0d,0d);
                     for (int i = 0; i <  contents.length; i++){
-                        if (getEnd().adjacent.contains(i))
-                            contents[i].DFS_Movement(getFinish(), distance, contents);
+                        if (getEnd().adjacent.contains(i)) {
+                            returnMovement = contents[i].DFS_Movement(getFinish(), distance, contents);
+                            returnMovement.reverse();
+                            setFinish(getEndX() + returnMovement.first,
+                                    getEndY() + returnMovement.second);
+                        }
                     }
-                    DoublePair returnMovement = DFS_Movement(getFinish(), distance, contents);
-                    setFinish(getEndX() + returnMovement.first,
-                            getEndY() + returnMovement.second);
-
+                    System.out.println(this.toString());
+                    return new DoublePair(getStartX() - source.first,
+                            getStartY() - source.second);
                 }
             }
         }
-        else if (source.equals(getFinish())){
-
+        else { //source.equals(getFinish())
+            if (getBeginning().isConstant()) {
+                //calculating the distance of movement
+                DoublePair bestPosition = Utils.getBestPosition(source, this);
+                //moving point there
+                setFinish(bestPosition.first, bestPosition.second);
+                //so we got the point's optimal position, and the edge's position,
+                //cuz other point is fixed
+                this.gotPosition = true;
+                System.out.println(this.toString());
+                return new DoublePair(bestPosition.first - source.first, bestPosition.second - source.second);
+            }
+            else {
+                //firstly, we move the edge cuz it's not fixed
+                setStart(getStartX() + distance.first, getStartY() + distance.second);
+                //then we try to move all the adjacent edges
+                if (!getBeginning().adjacent.isEmpty()) {
+                    DoublePair returnMovement;// = new DoublePair(0d,0d);
+                    for (int i = 0; i <  contents.length; i++){
+                        if (getBeginning().adjacent.contains(i)) {
+                            returnMovement = contents[i].DFS_Movement(getStart(), distance, contents);
+                            returnMovement.reverse();
+                            setStart(getStartX() + returnMovement.first,
+                                    getStartY() + returnMovement.second);
+                        }
+                    }
+                    System.out.println(this.toString());
+                    return new DoublePair(getStartX() - source.first,
+                            getStartY() - source.second);
+                }
+            }
         }
         return new DoublePair(0,0);
     }

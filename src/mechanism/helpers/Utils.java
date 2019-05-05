@@ -1,8 +1,9 @@
 package helpers;
 
 import javafx.scene.Node;
-import mechanics_fx.MechPart;
-import mechanics_fx.myPoint;
+import mechanics_swing.Edge;
+import mechanics_swing.MechPart;
+import mechanics_swing.myPoint;
 
 public class Utils {
     public static double distance(DoublePair a, DoublePair b) {
@@ -59,27 +60,34 @@ public class Utils {
     }
 
     /**
-     *
-     * @param pointToMove the point to find best position for
-     * @return distance as DoublePair to the new position
+     * @param pointToMove point to calculate distance from
+     * @param edge which is going to be moved
+     * @return coords of the closest possible position of edge
      */
-    public static DoublePair getDistance(DoublePair pointToMove){
+    public static DoublePair getBestPosition(DoublePair pointToMove, Edge edge){
         DoublePair[] positions = new DoublePair[31];
-        DoublePair pos;
-        int index = 0;
+
+        edge.rotate(-15d);
+        for (int i = 0; i < 31; i++){
+            positions[i] = edge.getFinish();
+            edge.rotate(1);
+        }
+        edge.rotate(-15d); // return to starting position
 
         double min = Utils.distance(pointToMove, positions[0]);
 
+        int index = 0;
+        DoublePair pos;
         for (int i = -15; i <= 15; i++){
             pos = Utils.Pif2Pol(pointToMove);
             pos.second += i;
             positions[i+15] = Utils.Pol2Pif(pos);
-            if (min > Utils.distance(pointToMove, positions[i])) {
-                min = Utils.distance(pointToMove, positions[i]);
+            if (min > Utils.distance(pointToMove, positions[i+15])) {
+                min = Utils.distance(pointToMove, positions[i+15]);
                 index = i;
             }
         }
-        return positions[index];
+        return positions[index+15];
     }
 
     public static Node[] toNode(MechPart[] ar){
