@@ -29,8 +29,7 @@ public class DrawPanel extends JPanel {
             drawPath(g2, positions);
 
         drawMech(g2, mech);
-//        drawPath(g2, posits);
-        drawNet(g2);
+//        drawNet(g2);
     }
 
     void drawMech(Graphics2D g2, Mechanism m){

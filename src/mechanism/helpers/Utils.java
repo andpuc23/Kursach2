@@ -65,20 +65,20 @@ public class Utils {
      * @return coords of the closest possible position of edge
      */
     public static DoublePair getBestPosition(DoublePair pointToMove, Edge edge){
-        DoublePair[] positions = new DoublePair[31];
+        DoublePair[] positions = new DoublePair[61];
 
-        edge.rotate(-15d);
+        edge.rotate(-7.5d);
         for (int i = 0; i < 31; i++){
             positions[i] = edge.getFinish();
-            edge.rotate(1);
+            edge.rotate(0.25d);
         }
-        edge.rotate(-15d); // return to starting position
+        edge.rotate(-7.5d); // return to starting position
 
         double min = Utils.distance(pointToMove, positions[0]);
 
         int index = 0;
         DoublePair pos;
-        for (int i = -15; i <= 15; i++){
+        for (int i = -30; i <= 30; i++){
             pos = Utils.Pif2Pol(pointToMove);
             pos.second += i;
             positions[i+15] = Utils.Pol2Pif(pos);
@@ -87,7 +87,7 @@ public class Utils {
                 index = i;
             }
         }
-        return positions[index+15];
+        return positions[index+30];
     }
 
     public static Node[] toNode(MechPart[] ar){
