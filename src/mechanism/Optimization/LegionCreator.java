@@ -4,7 +4,6 @@ import Helpers.WriterReader;
 import Mechanics.Mechanism;
 
 import java.awt.geom.Point2D;
-import java.nio.file.Paths;
 import java.util.Random;
 
 public class LegionCreator {
@@ -30,13 +29,8 @@ public class LegionCreator {
                     System.out.println(String.format("Written mech %d of %d", i + 1, number));
 
                     mech.initPositions();
-                    String lastPath = Paths.get(".").toAbsolutePath().normalize().toString();
-                    lastPath = lastPath.substring(lastPath.length()-15);
-                    String prepath = "";
-                    if (lastPath.equals("TestProject_jar"))
-                        prepath += "..\\..\\..\\";
 
-                    WriterReader posWrite = new WriterReader(String.format(prepath + "data\\positions%d.csv", i));
+                    WriterReader posWrite = new WriterReader(String.format("data\\positions%d.csv", i));
                     for (Point2D p : mech.positions)
                         posWrite.write(new double[]{p.getX()}, p.getY());
 

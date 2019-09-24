@@ -3,24 +3,37 @@ package Optimization;
 import Helpers.WriterReader;
 
 import java.io.*;
-import java.nio.file.Paths;
 
 public class OutsourceAttractor {
     public OutsourceAttractor(){}
 
     public void runPython(){
-        String lastPath = Paths.get(".").toAbsolutePath().normalize().toString();
-        lastPath = lastPath.substring(lastPath.length()-11);
-        String path = "";
-        if (lastPath.equals("Project_jar"))
-            path += "..\\..\\..\\";
-
-        WriterReader wr = new WriterReader(path + "data\\mechs.csv");
+        WriterReader wr = new WriterReader("data\\mechs.csv");
         wr.readSingle();
         try {
-//            System.out.println("python LinReg.py " + wr.features.length);
             String num = Integer.toString(wr.features.length);
-            new ProcessBuilder("python", path + "LinReg.py", num).start();
+
+            FileWriter appender = new FileWriter("PythonRunner.bat", true);
+            appender.write(" " + num);
+            appender.close();
+
+            System.out.println("run PythonRunner.bat, then type \"done\"");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+            String inp = "";
+            while (!inp.toLowerCase().equals("done"))
+                inp = in.readLine();
+
+            appender = new FileWriter("PythonRunner.bat");
+            appender.write("python LinReg.py");
+            appender.close();
+
+
+        }catch (FileNotFoundException f) {
+            System.out.println("Some files are not found");
+            System.out.println("Ensure that you've run the file, and it contains phrase like\n" +
+                    "python LinReg.py [some number]");
+            return;
         } catch (IOException e) {
             e.printStackTrace();
         }

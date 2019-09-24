@@ -1,2 +1,1 @@
-cd out/artifacts/Project_jar
-java -jar Project.jar
+java -jar out/artifacts/Project_jar/Project.jar

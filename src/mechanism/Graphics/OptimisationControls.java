@@ -8,7 +8,6 @@ import Optimization.OutsourceAttractor;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
-import java.nio.file.Paths;
 
 class OptimisationControls extends JPanel {
     private DrawPanel drawPanel;
@@ -42,14 +41,12 @@ class OptimisationControls extends JPanel {
         createTrainSamples.setFont(font);
         add(createTrainSamples);
         createTrainSamples.addActionListener(event -> {
-            String lastPath = Paths.get(".").toAbsolutePath().normalize().toString();
-            lastPath = lastPath.substring(lastPath.length()-11);
-            String path = "";
-            if (lastPath.equals("Project_jar"))
-                path += "..\\..\\..\\";
-            path += "data\\mechs.csv";
+
+            String path = "data\\mechs.csv";
+
             if (new File(path).delete())
                 System.out.println("Deleted mechs.csv, writing new one");
+
             new LegionCreator(path, slider.getValue());
         });
 
@@ -69,7 +66,33 @@ class OptimisationControls extends JPanel {
         add(train);
         train.addActionListener( event ->{
             OutsourceAttractor linReg = new OutsourceAttractor();
+
+            String path = "data\\mses.csv";
+
+            if (new File(path).delete())
+                System.out.println("Deleted mses.csv, writing new one");
             linReg.runPython();
+
+            WriterReader mseReader = new WriterReader(path);
+            mseReader.readSingle();
+
+            if (mseReader.features == null)
+                return;
+
+            System.out.println(String.format("Status: found %d mechs, computing", mseReader.features.length));
+            int index = 0;
+            double minMSE = mseReader.features[0][0];
+            for (int i = 0; i < mseReader.features.length; i++){
+                if (mseReader.features[i][0] < minMSE){
+                    index = i;
+                    minMSE = mseReader.features[i][0];
+                }
+            }
+
+            System.out.println("best mech is №" + index + ", MSE = " + mseReader.features[index][0]);
+
+            num.setText(Integer.toString(index));
+            loadMech();
         });
     }
 
@@ -90,13 +113,7 @@ class OptimisationControls extends JPanel {
             return;
         }
 
-        String lastPath = Paths.get(".").toAbsolutePath().normalize().toString();
-        lastPath = lastPath.substring(lastPath.length()-11);
-        String path = "";
-        if (lastPath.equals("Project_jar"))
-            path += "..\\..\\..\\";
-
-        WriterReader mechReader = new WriterReader(path+"data\\mechs.csv");
+        WriterReader mechReader = new WriterReader("data\\mechs.csv");
         mechReader.readSingle();
 
         if (mechNo >= mechReader.features.length){

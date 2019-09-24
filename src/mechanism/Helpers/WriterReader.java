@@ -36,7 +36,10 @@ public class WriterReader {
 
             csvReader.close();
         } catch (FileNotFoundException fnfe) {
-            fnfe.printStackTrace();
+            System.out.println("Some files are not found");
+            System.out.println("Ensure that you've run the file, and it contains phrase like\n" +
+                    "python LinReg.py [some number]");
+            return;
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
@@ -53,8 +56,6 @@ public class WriterReader {
             fw.close();
 
         } catch (Exception e) {e.printStackTrace();}
-
-//        System.out.println("Written mech successfully");
     }
 
     public void write(double[] numbers){
