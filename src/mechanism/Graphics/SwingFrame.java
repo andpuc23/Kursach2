@@ -4,6 +4,7 @@ import Mechanics.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 
 public class SwingFrame extends JFrame {
@@ -37,7 +38,14 @@ public class SwingFrame extends JFrame {
 
     private SwingFrame(){
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setIconImage(new ImageIcon("icon.png").getImage());
+
+        String lastPath = Paths.get(".").toAbsolutePath().normalize().toString();
+        lastPath = lastPath.substring(lastPath.length()-11);
+        String path = "";
+        if (lastPath.equals("Project_jar"))
+            path += "..\\..\\..\\";
+
+        setIconImage(new ImageIcon(path + "icon.png").getImage());
 
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (int)(dimension.getWidth() / 3);

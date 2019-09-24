@@ -43,9 +43,9 @@ class OptimisationControls extends JPanel {
         add(createTrainSamples);
         createTrainSamples.addActionListener(event -> {
             String lastPath = Paths.get(".").toAbsolutePath().normalize().toString();
-            lastPath = lastPath.substring(lastPath.length()-15);
+            lastPath = lastPath.substring(lastPath.length()-11);
             String path = "";
-            if (lastPath.equals("TestProject_jar"))
+            if (lastPath.equals("Project_jar"))
                 path += "..\\..\\..\\";
             path += "data\\mechs.csv";
             if (new File(path).delete())
@@ -91,12 +91,12 @@ class OptimisationControls extends JPanel {
         }
 
         String lastPath = Paths.get(".").toAbsolutePath().normalize().toString();
-        lastPath = lastPath.substring(lastPath.length()-15);
+        lastPath = lastPath.substring(lastPath.length()-11);
         String path = "";
-        if (lastPath.equals("TestProject_jar"))
+        if (lastPath.equals("Project_jar"))
             path += "..\\..\\..\\";
 
-        WriterReader mechReader = new WriterReader(path);
+        WriterReader mechReader = new WriterReader(path+"data\\mechs.csv");
         mechReader.readSingle();
 
         if (mechNo >= mechReader.features.length){

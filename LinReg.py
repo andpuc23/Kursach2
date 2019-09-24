@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 
-
+print ('done imports')
 number = int(sys.argv[1])
 
 y = []
